@@ -1,5 +1,12 @@
 # LegacyAzureServiceBusClientInstrumentation
 
+## Deprecation Notice
+
+`Microsoft.Azure.ServiceBus` nuget package is deprecated.
+There is a recommendation to migrate to [`Azure.Messaging.ServiceBus`](https://www.nuget.org/packages/Azure.Messaging.ServiceBus). Instrumentation for new package should work without any changes.
+
+## How to make spans for Microsoft.Azure.ServiceBus
+
 Go to source folder
 
 ```cmd
