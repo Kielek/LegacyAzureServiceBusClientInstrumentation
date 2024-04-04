@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.ServiceBus;
+using System.Diagnostics;
+using Microsoft.Azure.ServiceBus;
 using System.Text;
 
 namespace BasicSendReceiveQuickStart
@@ -26,6 +27,10 @@ namespace BasicSendReceiveQuickStart
                         break;
                 }
             }
+
+            var registrationListener = new RegistrationListener("Microsoft.Azure.ServiceBus", new DummyListener());
+            using var outerSubscription = DiagnosticListener.AllListeners.Subscribe(registrationListener);
+
 
             if (!string.IsNullOrEmpty(serviceBusConnectionString) && !string.IsNullOrEmpty(queueName))
                 MainAsync(serviceBusConnectionString, queueName).GetAwaiter().GetResult();
@@ -121,6 +126,43 @@ namespace BasicSendReceiveQuickStart
             {
                 Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
+        }
+    }
+
+    public class RegistrationListener(
+        string diagnosticListenerName,
+        IObserver<KeyValuePair<string, object?>> internalListener)
+        : IObserver<DiagnosticListener>
+    {
+        public void OnCompleted()
+        {
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnNext(DiagnosticListener value)
+        {
+            if (value.Name == diagnosticListenerName)
+            {
+                value.Subscribe(internalListener);
+            }
+        }
+    }
+
+    public class DummyListener : IObserver<KeyValuePair<string, object?>>
+    {
+        public void OnCompleted()
+        {
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnNext(KeyValuePair<string, object?>  value)
+        {
         }
     }
 }

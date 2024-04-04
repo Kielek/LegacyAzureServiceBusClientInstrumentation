@@ -39,3 +39,7 @@ Execute instrumented application
 ```cmd
 .\splunk-launch.cmd .\ObsoleteAzureServiceBusClient.exe
 ```
+
+As a result, you will see separate traces but they can be manually correlated.
+
+![Example](example.png)
